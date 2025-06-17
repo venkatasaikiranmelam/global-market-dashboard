@@ -120,28 +120,46 @@ except:
     st.error("Error loading Brent Oil data.")
 
 # -------------------------------
-# 5. Market Correlation Heatmap
+# 5. Correlation Heatmap (Extended)
 # -------------------------------
 st.header("5️⃣ Correlation Heatmap")
 
-# Ensure no NaNs or misaligned indices
+btc = yf.Ticker("BTC-USD").history(period="1mo")
+gold = yf.Ticker("GLD").history(period="1mo")
+nasdaq = yf.Ticker("^IXIC").history(period="1mo")
+
 df_corr = pd.DataFrame({
     "S&P 500": sp500["Close"].pct_change(),
     "USD/INR": fx_hist["Close"].pct_change() if not fx_hist.empty else None,
-    "Crude Oil": oil["Close"].pct_change()
-}).dropna()  # 🧼 Drop any rows with NaN to avoid empty values
+    "Crude Oil": oil["Close"].pct_change(),
+    "Bitcoin": btc["Close"].pct_change(),
+    "Gold": gold["Close"].pct_change(),
+    "NASDAQ": nasdaq["Close"].pct_change()
+}).dropna()
 
 if df_corr.empty:
     st.warning("Not enough overlapping data to compute correlation.")
 else:
     corr = df_corr.corr()
-    heatmap = px.imshow(
-        corr,
-        text_auto=True,
-        title="📊 Market Correlation Heatmap",
-        color_continuous_scale="Blues"
-    )
+    heatmap = px.imshow(corr, text_auto=True, title="📊 Extended Market Correlation Heatmap", color_continuous_scale="Blues")
     st.plotly_chart(heatmap, use_container_width=True)
+
+# -------------------------------
+# Footer
+# -------------------------------
+st.markdown("""---""")
+st.markdown(
+    """
+    <div style='text-align: center;'>
+        <p>🛠️ Powered by <strong>Venkata Saikiran Melam</strong></p>
+        <small>This dashboard is for educational and demonstration purposes only.<br>
+        Data sourced from public APIs (World Bank, Yahoo Finance, exchangerate.host).</small>
+        <br><br>
+        <em>Dashboard refreshes automatically every 1 hour.</em>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 st.markdown(
     """
