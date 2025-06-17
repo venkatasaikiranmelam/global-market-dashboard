@@ -161,12 +161,3 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.markdown(
-    """
-    <div style='text-align: center; font-size: 15px;'>
-        <p>🛠️ <strong>Powered by Venkata Saikiran Melam</strong></p>
-        <p><em>This dashboard auto-refreshes every hour. Data from World Bank, Yahoo Finance, exchangerate.host</em></p>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
