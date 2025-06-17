@@ -12,7 +12,7 @@ st.set_page_config(layout="wide", page_title="🌍 Global Market Dashboard")
 # -------------------------------
 st.title("🌍 Global Market Live Monitor")
 st.markdown("An interactive dashboard showing **GDP**, **S&P 500**, **USD to INR**, **Crude Oil**, and correlations.")
-st.markdown("⏱️ _Data auto-refreshes every hour based on free API feeds._")
+st.markdown("⏱️ _Data auto-refreshes every hour _")
 
 # -------------------------------
 # 1. GDP Data
