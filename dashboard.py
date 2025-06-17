@@ -114,25 +114,36 @@ except:
     st.error("Error loading Brent Oil data.")
 
 # -------------------------------
-# 5. Market Correlation Heatmap
+# 5️⃣ Enhanced Market Correlation Heatmap
 # -------------------------------
-st.header("5️⃣ Correlation Heatmap")
-try:
-    df_corr = pd.DataFrame({
-        "S&P 500": sp500["Close"].pct_change(),
-        "USD/INR": fx_hist["Close"].pct_change() if 'fx_hist' in locals() else 0,
-        "Crude Oil": oil["Close"].pct_change()
-    })
-    corr = df_corr.corr()
-    heatmap = px.imshow(corr, text_auto=True, title="📊 Market Correlation Heatmap")
-    st.plotly_chart(heatmap, use_container_width=True)
-except:
-    st.warning("Unable to render correlation heatmap due to missing data.")
+st.header("5️⃣ Enhanced Correlation Heatmap")
 
-# -------------------------------
-# Footer
-# -------------------------------
-st.markdown("""---""")
+# Fetch additional assets
+try:
+    gold = yf.Ticker("GC=F").history(period="1mo")  # Gold Futures
+    bitcoin = yf.Ticker("BTC-USD").history(period="1mo")  # Bitcoin
+except:
+    gold = bitcoin = pd.DataFrame()
+
+# Safely build correlation matrix
+df_corr = pd.DataFrame({
+    "S&P 500": sp500["Close"].pct_change(),
+    "USD/INR": fx_hist["Close"].pct_change() if 'fx_hist' in locals() and not fx_hist.empty else None,
+    "Crude Oil": oil["Close"].pct_change() if not oil.empty else None,
+    "Gold": gold["Close"].pct_change() if not gold.empty else None,
+    "Bitcoin": bitcoin["Close"].pct_change() if not bitcoin.empty else None
+})
+
+# Drop empty columns if data fetch failed
+df_corr = df_corr.dropna(axis=1, how='all')
+
+if df_corr.shape[1] >= 2:
+    corr = df_corr.corr()
+    heatmap = px.imshow(corr, text_auto=True, title="📊 Enhanced Market Correlation Heatmap")
+    st.plotly_chart(heatmap, use_container_width=True)
+else:
+    st.warning("Not enough valid data to build correlation heatmap.")
+
 st.markdown(
     """
     <div style='text-align: center; font-size: 15px;'>
