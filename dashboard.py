@@ -10,8 +10,14 @@ st.set_page_config(layout="wide", page_title="🌍 Global Market Dashboard")
 # -------------------------------
 # Title & Header
 # -------------------------------
-st.title("🌍 Global Market Live Monitor")
-st.markdown("An interactive dashboard showing **GDP**, **S&P 500**, **USD to INR**, **Crude Oil**, and correlations.")
+st.markdown("""
+    <h1 style='text-align: center;'>🌍 Global Market Live Monitor</h1>
+    <p style='text-align: center; font-size: 18px;'>
+        An interactive dashboard showing <strong>GDP</strong>, <strong>S&amp;P 500</strong>, <strong>USD to INR</strong>,
+        <strong>Crude Oil</strong>, and <strong>Correlations</strong>.
+    </p>
+""", unsafe_allow_html=True)
+
 st.markdown("⏱️ _Data auto-refreshes every hour _")
 
 # -------------------------------
