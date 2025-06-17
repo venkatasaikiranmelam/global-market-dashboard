@@ -120,20 +120,28 @@ except:
     st.error("Error loading Brent Oil data.")
 
 # -------------------------------
-# 5️⃣ Market Correlation Heatmap
+# 5. Market Correlation Heatmap
 # -------------------------------
 st.header("5️⃣ Correlation Heatmap")
-try:
-    df_corr = pd.DataFrame({
-        "S&P 500": sp500["Close"].pct_change(),
-        "USD/INR": fx_hist["Close"].pct_change() if 'fx_hist' in locals() else 0,
-        "Crude Oil": oil["Close"].pct_change()
-    })
+
+# Ensure no NaNs or misaligned indices
+df_corr = pd.DataFrame({
+    "S&P 500": sp500["Close"].pct_change(),
+    "USD/INR": fx_hist["Close"].pct_change() if not fx_hist.empty else None,
+    "Crude Oil": oil["Close"].pct_change()
+}).dropna()  # 🧼 Drop any rows with NaN to avoid empty values
+
+if df_corr.empty:
+    st.warning("Not enough overlapping data to compute correlation.")
+else:
     corr = df_corr.corr()
-    heatmap = px.imshow(corr, text_auto=True, title="📊 Market Correlation Heatmap")
+    heatmap = px.imshow(
+        corr,
+        text_auto=True,
+        title="📊 Market Correlation Heatmap",
+        color_continuous_scale="Blues"
+    )
     st.plotly_chart(heatmap, use_container_width=True)
-except:
-    st.warning("Unable to render correlation heatmap due to missing data.")
 
 st.markdown(
     """
